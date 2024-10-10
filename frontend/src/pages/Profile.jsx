@@ -4,8 +4,8 @@ function Profile() {
 
   // will be replaced with data from backend
   const initialProfile = {
-    name: 'Jane Doe',
-    grade: 'Junior',
+    name: 'Cole Smith',
+    grade: 'Sophomore',
     major: 'Computer Science',
     interests: ['Technology', 'Music'],
   };
@@ -14,7 +14,6 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(profile);
 
-  // filler data
   const availableInterests = [
     'Technology',
     'Art',
