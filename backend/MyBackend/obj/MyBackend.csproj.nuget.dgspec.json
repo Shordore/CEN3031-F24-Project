@@ -1,0 +1,58 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\sea77\\BACKEND SWE\\CEN3031-F24-Project\\backend\\MyBackend\\MyBackend.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\sea77\\BACKEND SWE\\CEN3031-F24-Project\\backend\\MyBackend\\MyBackend.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\sea77\\BACKEND SWE\\CEN3031-F24-Project\\backend\\MyBackend\\MyBackend.csproj",
+        "projectName": "MyBackend",
+        "projectPath": "C:\\Users\\sea77\\BACKEND SWE\\CEN3031-F24-Project\\backend\\MyBackend\\MyBackend.csproj",
+        "packagesPath": "C:\\Users\\sea77\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sea77\\BACKEND SWE\\CEN3031-F24-Project\\backend\\MyBackend\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\sea77\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "dependencies": {
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.6.2, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.426\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win7-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}
