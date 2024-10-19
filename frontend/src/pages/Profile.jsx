@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 function Profile() {
-
   // will be replaced with data from backend
   const initialProfile = {
     name: 'Cole Smith',
@@ -26,6 +26,8 @@ function Profile() {
     'Cooking',
     'Fitness',
   ];
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleEdit = () => {
     setFormData(profile);
@@ -61,6 +63,10 @@ function Profile() {
     setFormData(profile);
   };
 
+  const handleCreateClub = () => {
+    navigate('/create-club');
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-base-200 p-4">
       <div className="card w-full max-w-md bg-base-100 shadow-xl p-6">
@@ -87,9 +93,12 @@ function Profile() {
                 ))}
               </ul>
             </div>
-            <div className="text-center">
+            <div className="flex flex-col space-y-2">
               <button className="btn btn-primary" onClick={handleEdit}>
                 Edit Profile
+              </button>
+              <button className="btn btn-secondary" onClick={handleCreateClub}>
+                Create New Club
               </button>
             </div>
           </div>
