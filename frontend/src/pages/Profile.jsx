@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   // will be replaced with data from backend
@@ -27,7 +27,7 @@ function Profile() {
     'Fitness',
   ];
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleEdit = () => {
     setFormData(profile);
