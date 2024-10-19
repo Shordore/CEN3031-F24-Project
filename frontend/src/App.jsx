@@ -10,6 +10,7 @@ import Login from './pages/UserLogin'
 import LoginRedirect from './pages/RedirectRegLogin'
 
 import './App.css'
+import CreateClub from './pages/CreateClub'
 
 function App() {
   const isUserLoggedIn = false; //TODO: replace with database check once backend is implemented
@@ -40,7 +41,7 @@ function App() {
               {isUserLoggedIn ? (
                   <Link to="/profile">Profile</Link>
                 ) : (
-                  <Link to="/pleaselogin">Profile</Link>
+                  <Link to="/please-login">Profile</Link>
                 )}
               </li>
             </ul>
@@ -53,7 +54,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/pleaselogin" element={<LoginRedirect />} />
+            <Route path="/please-login" element={<LoginRedirect />} />
+            <Route path="/create-club" element={<CreateClub />} />
           </Routes>
         </main>
       </div>
