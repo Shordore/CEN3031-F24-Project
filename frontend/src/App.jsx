@@ -11,6 +11,7 @@ import LoginRedirect from './pages/RedirectRegLogin'
 
 import './App.css'
 import CreateClub from './pages/CreateClub'
+import Calendar from './pages/Calendar'
 
 function App() {
   const isUserLoggedIn = false; //TODO: replace with database check once backend is implemented
@@ -56,6 +57,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/please-login" element={<LoginRedirect />} />
             <Route path="/create-club" element={<CreateClub />} />
+            <Route path="/calendar" element={<Calendar />} />
           </Routes>
         </main>
       </div>
