@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\sea77\\BACKEND SWE\\CEN3031-F24-Project\\backend\\MyBackend\\MyBackend.csproj": {}
+    "/Volumes/Oxy_Code_On/School/Coding Projects/CEN3031/ClubSwamp/CEN3031-F24-Project/backend/MyBackend/MyBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\sea77\\BACKEND SWE\\CEN3031-F24-Project\\backend\\MyBackend\\MyBackend.csproj": {
+    "/Volumes/Oxy_Code_On/School/Coding Projects/CEN3031/ClubSwamp/CEN3031-F24-Project/backend/MyBackend/MyBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\sea77\\BACKEND SWE\\CEN3031-F24-Project\\backend\\MyBackend\\MyBackend.csproj",
+        "projectUniqueName": "/Volumes/Oxy_Code_On/School/Coding Projects/CEN3031/ClubSwamp/CEN3031-F24-Project/backend/MyBackend/MyBackend.csproj",
         "projectName": "MyBackend",
-        "projectPath": "C:\\Users\\sea77\\BACKEND SWE\\CEN3031-F24-Project\\backend\\MyBackend\\MyBackend.csproj",
-        "packagesPath": "C:\\Users\\sea77\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\sea77\\BACKEND SWE\\CEN3031-F24-Project\\backend\\MyBackend\\obj\\",
+        "projectPath": "/Volumes/Oxy_Code_On/School/Coding Projects/CEN3031/ClubSwamp/CEN3031-F24-Project/backend/MyBackend/MyBackend.csproj",
+        "packagesPath": "/Users/sdarioosh/.nuget/packages/",
+        "outputPath": "/Volumes/Oxy_Code_On/School/Coding Projects/CEN3031/ClubSwamp/CEN3031-F24-Project/backend/MyBackend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\sea77\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/sdarioosh/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -24,6 +24,7 @@
         },
         "frameworks": {
           "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -31,26 +32,74 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
         "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.10, )"
             },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.1.2, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.6.2, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.1.2, )"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.426\\RuntimeIdentifierGraph.json"
-        }
-      },
-      "runtimes": {
-        "win7-x86": {
-          "#import": []
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
