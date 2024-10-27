@@ -7,6 +7,21 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add CORS services and define a policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost5173",
+        builder =>
+        {
+            builder
+                .WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
+// Register your services
 builder.Services.AddScoped<Authenticator>();
 
 // Configure services
@@ -30,11 +45,12 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false, // Set to true if you have an issuer
-        ValidateAudience = false, // Set to true if you have an audience
+        ValidateIssuer = false, // Set to true and specify if you have an issuer
+        ValidateAudience = false, // Set to true and specify if you have an audience
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        ClockSkew = TimeSpan.Zero // Optional: Reduce clock skew if needed
     };
 });
 
@@ -73,7 +89,14 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure middleware
+app.UseRouting();
+
+app.UseCors("AllowLocalhost5173");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+// 7. Configure middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -83,11 +106,6 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty; // Set Swagger UI at the root
     });
 }
-
-app.UseRouting();
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapControllers();
 
