@@ -57,11 +57,9 @@ function Login({ onLogin }) {
 
         navigate('/profile');
       } else {
-        const errorData = await response.json();
-        setError(errorData.toString());
+        setError('Invalid UFID or password. Please try again.');
       }
-    } catch (err) {
-      console.error('An error occurred during login:', err);
+    } catch {
       setError('An unexpected error occurred. Please try again later.');
     } finally {
       setIsLoading(false);

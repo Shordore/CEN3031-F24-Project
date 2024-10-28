@@ -49,11 +49,10 @@ function Registration() {
         alert('Registration successful! Please log in.');
         navigate('/login');
       } else {
-        const errorData = await response.json();
-        setError(errorData.toString());
+        // TODO: show custom error message from backend
+        setError('Invalid UFID or password.');
       }
-    } catch (err) {
-      console.error('An error occurred during registration:', err);
+    } catch {
       setError('An unexpected error occurred. Please try again later.');
     } finally {
       setIsLoading(false);
