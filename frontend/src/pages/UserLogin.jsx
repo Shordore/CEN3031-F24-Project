@@ -1,5 +1,7 @@
+// src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authenticatedFetch } from '../utils/api';
 
 function Login({ onLogin }) {
   const [formData, setFormData] = useState({
@@ -37,11 +39,8 @@ function Login({ onLogin }) {
     try {
       setIsLoading(true);
 
-      const response = await fetch('http://localhost:5051/api/Account/login', {
+      const response = await authenticatedFetch('http://localhost:5051/api/Account/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(loginData),
       });
 
@@ -57,7 +56,8 @@ function Login({ onLogin }) {
 
         navigate('/profile');
       } else {
-        setError('Invalid UFID or password. Please try again.');
+        const errorData = await response.text();
+        setError(errorData || 'Invalid UFID or password. Please try again.');
       }
     } catch {
       setError('An unexpected error occurred. Please try again later.');

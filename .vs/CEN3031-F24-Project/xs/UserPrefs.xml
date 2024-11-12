@@ -1,0 +1,49 @@
+﻿<Properties StartupConfiguration="{B76405BE-7BC5-48F6-9742-3338ED18CAB5}|https">
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workbench ActiveDocument="backend/MyBackend/Models/User.cs">
+    <Files>
+      <File FileName="backend/MyBackend/Controllers/AccountController.cs" Line="36" Column="25" />
+      <File FileName="backend/MyBackend/Controllers/ClubController.cs" Line="30" Column="10" />
+      <File FileName="backend/MyBackend/Services/Authenticator.cs" Line="25" Column="10" />
+      <File FileName="backend/MyBackend/Services/Server.cs" Line="21" Column="1" />
+      <File FileName="backend/MyBackend/Models/User.cs" Line="14" Column="1" />
+      <File FileName="backend/MyBackend/Models/Club.cs" Line="1" Column="1" />
+      <File FileName="backend/MyBackend/Models/DTO/RegisterRequest.cs" Line="1" Column="45" />
+      <File FileName="backend/MyBackend/Models/DTO/LoginRequest.cs" Line="13" Column="2" />
+      <File FileName="backend/MyBackend/Migrations/AppDbContextModelSnapshot.cs" Line="1" Column="1" />
+      <File FileName="backend/MyBackend/Migrations/20241024041056_InitialCreate.cs" Line="1" Column="1" />
+      <File FileName="backend/MyBackend/Data/AppDbContext.cs" Line="33" Column="1" />
+      <File FileName="backend/MyBackend/Models/ClubMember.cs" Line="1" Column="1" />
+      <File FileName="backend/MyBackend/Models/DTO/UserProfileResponse.cs" Line="4" Column="32" />
+      <File FileName="backend/MyBackend/Models/DTO/UpdateProfileRequest.cs" Line="4" Column="32" />
+      <File FileName="backend/MyBackend/Models/DTO/ClubMemberResponse.cs" Line="13" Column="1" />
+      <File FileName="backend/MyBackend/MyBackend.http" Line="1" Column="1" />
+      <File FileName="backend/MyBackend/Program.cs" Line="112" Column="1" />
+      <File FileName="backend/MyBackend/Startup.cs" Line="1" Column="1" />
+      <File FileName="backend/MyBackend/Models/DTO/CreateClubRequest.cs" Line="15" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="CEN3031-F24-Project" expanded="True">
+            <Node name="backend" expanded="True">
+              <Node name="MyBackend">
+                <Node name="Controllers" expanded="True" />
+                <Node name="Data" expanded="True" />
+                <Node name="Models">
+                  <Node name="User.cs" selected="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.backend.MyBackend PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+</Properties>

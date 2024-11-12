@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+// src/pages/Profile.jsx
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 function Profile() {
-  // will be replaced with data from backend
-  const initialProfile = {
-    name: 'Cole Smith',
-    grade: 'Sophomore',
-    major: 'Computer Science',
-    interests: ['Technology', 'Music'],
-  };
-
-  const [profile, setProfile] = useState(initialProfile);
+  const { user, loading, error, updateUserProfile } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState(profile);
+  const [formData, setFormData] = useState({
+    name: '',
+    grade: '',
+    major: '',
+    interests: [],
+  });
+  const [formError, setFormError] = useState('');
+  const navigate = useNavigate();
 
   const availableInterests = [
     'Technology',
@@ -27,13 +28,21 @@ function Profile() {
     'Fitness',
   ];
 
-  const navigate = useNavigate();
-
+  // Handle Edit Button Click
   const handleEdit = () => {
-    setFormData(profile);
-    setIsEditing(true);
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        grade: user.grade || '',
+        major: user.major || '',
+        interests: user.interestCategories || [],
+      });
+      setIsEditing(true);
+      setFormError('');
+    }
   };
 
+  // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -42,6 +51,7 @@ function Profile() {
     }));
   };
 
+  // Toggle Interest Selection
   const toggleInterest = (interest) => {
     setFormData((prev) => {
       const interests = prev.interests.includes(interest)
@@ -51,21 +61,72 @@ function Profile() {
     });
   };
 
-  const handleSave = (e) => {
+  // Handle Form Submission
+  const handleSave = async (e) => {
     e.preventDefault();
-    setProfile(formData);
-    setIsEditing(false);
-    // send to backend
+    setFormError('');
+
+    const updatedProfile = {
+      name: formData.name,
+      grade: formData.grade,
+      major: formData.major,
+      interestCategories: formData.interests,
+    };
+
+    try {
+      await updateUserProfile(updatedProfile);
+      setIsEditing(false);
+    } catch (err) {
+      setFormError('Failed to update profile.');
+    }
   };
 
+  // Handle Cancel Editing
   const handleCancel = () => {
     setIsEditing(false);
-    setFormData(profile);
+    setFormError('');
   };
 
   const handleCreateClub = () => {
     navigate('/create-club');
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-xl">Loading profile...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="alert alert-error shadow-lg">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current flex-shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M12 4v16m8-8H4"
+              />
+            </svg>
+            <span>{error}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Or some fallback UI
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-base-200 p-4">
@@ -75,24 +136,48 @@ function Profile() {
             <h2 className="text-2xl font-bold mb-4 text-center">User Profile</h2>
             <div>
               <h3 className="font-semibold">Name:</h3>
-              <p>{profile.name}</p>
+              <p>{user.name || 'N/A'}</p>
             </div>
             <div>
               <h3 className="font-semibold">Grade:</h3>
-              <p>{profile.grade}</p>
+              <p>{user.grade || 'N/A'}</p>
             </div>
             <div>
               <h3 className="font-semibold">Major:</h3>
-              <p>{profile.major}</p>
+              <p>{user.major || 'N/A'}</p>
             </div>
             <div>
               <h3 className="font-semibold">Interests:</h3>
               <ul className="list-disc list-inside">
-                {profile.interests.map((interest) => (
-                  <li key={interest}>{interest}</li>
-                ))}
+                {user.interestCategories.length > 0 ? (
+                  user.interestCategories.map((interest) => (
+                    <li key={interest}>{interest}</li>
+                  ))
+                ) : (
+                  <li>No interests selected.</li>
+                )}
               </ul>
             </div>
+            {formError && (
+              <div className="alert alert-error shadow-lg">
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="stroke-current flex-shrink-0 h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  <span>{formError}</span>
+                </div>
+              </div>
+            )}
             <div className="flex flex-col space-y-2">
               <button className="btn btn-primary" onClick={handleEdit}>
                 Edit Profile
@@ -105,6 +190,28 @@ function Profile() {
         ) : (
           <form onSubmit={handleSave} className="space-y-4">
             <h2 className="text-2xl font-bold mb-4 text-center">Edit Profile</h2>
+
+            {/* Display form error message if any */}
+            {formError && (
+              <div className="alert alert-error shadow-lg">
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="stroke-current flex-shrink-0 h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  <span>{formError}</span>
+                </div>
+              </div>
+            )}
 
             <div>
               <label className="label">
