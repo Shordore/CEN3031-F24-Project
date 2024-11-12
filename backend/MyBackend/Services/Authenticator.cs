@@ -37,7 +37,10 @@ namespace ClubSwamp.Services
             var newUser = new User
             {
                 UFID = ufid,
-                PasswordHash = hashedPassword
+                PasswordHash = hashedPassword,
+                Name = "",
+                Grade = "",
+                Major = ""
             };
 
             // Add the user to the database context and save changes
@@ -76,7 +79,7 @@ namespace ClubSwamp.Services
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("ufid", ufid) }),
+                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, ufid) }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
