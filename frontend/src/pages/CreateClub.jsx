@@ -49,22 +49,22 @@ function CreateClub() {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
-
+  
     const payload = {
       name: clubData.name,
       description: clubData.description,
       categories: clubData.categories.join(', '),
     };
-
+  
     try {
       const response = await authenticatedFetch('http://localhost:5051/api/Club', {
         method: 'POST',
         body: JSON.stringify(payload),
       });
-
+  
       if (response.ok) {
-        // Optionally, you can navigate to the newly created club's page
-        navigate('/profile');
+        const newClub = await response.json(); // Assuming the response contains the new club's ID or slug
+        navigate(`/club_pages/${newClub.id}`); // Navigate to the club's page
       } else {
         const errorData = await response.text();
         setError(errorData || 'Failed to create club.');

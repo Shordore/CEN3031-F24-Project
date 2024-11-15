@@ -1,13 +1,13 @@
 // src/components/ClubCard.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 function ClubCard({ club }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    // TODO: add pages for clubs
-    // navigate(`/clubs/${club.Id}`);
+    navigate(`/club_pages/${club.id}`); // Navigate to the club page using the correct route
   };
 
   return (
@@ -29,5 +29,15 @@ function ClubCard({ club }) {
     </div>
   );
 }
+
+ClubCard.propTypes = {
+  club: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    categories: PropTypes.string,
+    members: PropTypes.arrayOf(PropTypes.object).isRequired,
+  }).isRequired,
+};
 
 export default ClubCard;
