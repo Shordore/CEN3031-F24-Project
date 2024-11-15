@@ -1,5 +1,5 @@
 // src/pages/Profile.jsx
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
@@ -76,7 +76,7 @@ function Profile() {
     try {
       await updateUserProfile(updatedProfile);
       setIsEditing(false);
-    } catch (err) {
+    } catch {
       setFormError('Failed to update profile.');
     }
   };

@@ -1,5 +1,5 @@
 // src/pages/Dashboard.jsx
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import { authenticatedFetch } from '../utils/api';
 import ClubCard from '../components/ClubCard';
@@ -32,7 +32,7 @@ function Dashboard() {
           const errorData = await response.text();
           setClubsError(errorData || 'Failed to fetch clubs.');
         }
-      } catch (err) {
+      } catch {
         setClubsError('An unexpected error occurred while fetching clubs.');
       } finally {
         setClubsLoading(false);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authenticatedFetch } from '../utils/api';
 
@@ -70,6 +70,7 @@ function CreateClub() {
         setError(errorData || 'Failed to create club.');
       }
     } catch (err) {
+      console.error(err);
       setError('An unexpected error occurred while creating the club.');
     } finally {
       setIsSubmitting(false);

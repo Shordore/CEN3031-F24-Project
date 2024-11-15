@@ -1,5 +1,5 @@
 // src/App.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Routes,
   Route,
@@ -13,7 +13,7 @@ import Login from './pages/UserLogin';
 import CreateClub from './pages/CreateClub';
 import Calendar from './pages/Calendar';
 import Dashboard from './pages/Dashboard';
-import { UserProvider, UserContext } from './context/UserContext';
+import { UserProvider } from './context/UserContext';
 import ClubPage from './pages/ClubPage';
 import './App.css';
 
