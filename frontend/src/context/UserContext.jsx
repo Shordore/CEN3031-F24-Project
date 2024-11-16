@@ -1,5 +1,5 @@
 // src/context/UserContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { authenticatedFetch } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,7 +31,7 @@ export const UserProvider = ({ children }) => {
         const errorData = await response.text();
         setError(errorData || 'Failed to fetch profile.');
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred while fetching profile.');
     } finally {
       setLoading(false);

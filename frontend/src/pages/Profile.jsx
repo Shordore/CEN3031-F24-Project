@@ -28,6 +28,14 @@ function Profile() {
     'Fitness',
   ];
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-base-200">
+        <div className="text-xl">Loading profile...</div>
+      </div>
+    );
+  }
+
   // Handle Edit Button Click
   const handleEdit = () => {
     if (user) {
