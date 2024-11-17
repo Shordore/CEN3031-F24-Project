@@ -24,7 +24,11 @@ export const UserProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        setUser(data);
+        // Ensure clubMemberships is an array; adjust based on actual API response
+        setUser({
+          ...data,
+          clubMemberships: data.clubMemberships || [], // Assuming the API returns clubMemberships
+        });
       } else if (response.status === 401) {
         navigate('/login');
       } else {
@@ -56,7 +60,10 @@ export const UserProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        setUser(data);
+        setUser({
+          ...data,
+          clubMemberships: data.clubMemberships || [],
+        });
       } else {
         const errorData = await response.text();
         setError(errorData || 'Failed to update profile.');

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClubSwamp.Models.DTOs
+namespace ClubSwamp.Models.DTO
 {
     public class UpdateProfileRequest
     {

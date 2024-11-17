@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ClubSwamp.Data;
 using ClubSwamp.Models;
-using ClubSwamp.Models.DTOs;
+using ClubSwamp.Models.DTO;
 using ClubSwamp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,11 +35,12 @@ namespace ClubSwamp.Controllers
 
             var result = await _authenticator.RegisterAsync(request.UFID, request.Password);
             if (!result)
-                return BadRequest("Username already exists.");
+                return BadRequest(new { message = "UFID already exists. Please choose a different UFID." });
 
-            return Ok("User registered successfully.");
+            return Ok(new { message = "User registered successfully." });
         }
 
+       
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
@@ -49,7 +50,7 @@ namespace ClubSwamp.Controllers
 
             var token = await _authenticator.AuthenticateAsync(request.UFID, request.Password);
             if (token == null)
-                return Unauthorized("Invalid username or password.");
+                return Unauthorized(new { message = "Invalid UFID or password." });
 
             return Ok(new { Token = token });
         }
@@ -59,7 +60,7 @@ namespace ClubSwamp.Controllers
         {
             var ufid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (ufid == null)
-                return Unauthorized();
+                return Unauthorized(new { message = "User not authenticated." });
 
             var user = await _context.Users
                 .Include(u => u.ClubMemberships)
@@ -68,7 +69,7 @@ namespace ClubSwamp.Controllers
                 .FirstOrDefaultAsync(u => u.UFID == ufid);
 
             if (user == null)
-                return NotFound("User not found.");
+                return NotFound(new { message = "User not found." });
 
             var response = new UserResponse
             {
@@ -86,9 +87,10 @@ namespace ClubSwamp.Controllers
                 InterestCategories = user.InterestCategories.Select(ic => ic.Category).ToList()
             };
 
-            return response;
+            return Ok(response);
         }
 
+        
         [HttpPut("me")]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request)
         {
@@ -97,14 +99,14 @@ namespace ClubSwamp.Controllers
 
             var ufid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (ufid == null)
-                return Unauthorized();
+                return Unauthorized(new { message = "User not authenticated." });
 
             var user = await _context.Users
                 .Include(u => u.InterestCategories)
                 .FirstOrDefaultAsync(u => u.UFID == ufid);
 
             if (user == null)
-                return NotFound("User not found.");
+                return NotFound(new { message = "User not found." });
 
             user.Name = request.Name;
             user.Grade = request.Grade;
@@ -112,7 +114,7 @@ namespace ClubSwamp.Controllers
 
             _context.InterestCategories.RemoveRange(user.InterestCategories);
 
-            if (request.InterestCategories != null)
+            if (request.InterestCategories != null && request.InterestCategories.Any())
             {
                 foreach (var category in request.InterestCategories)
                 {

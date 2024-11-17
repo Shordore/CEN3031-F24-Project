@@ -1,27 +1,54 @@
-import React, { useState } from 'react';
+// src/pages/Calendar.jsx
+import React, { useState, useEffect, useContext } from 'react';
 import EventModal from '../components/EventModal';
+import { UserContext } from '../context/UserContext';
+import { authenticatedFetch } from '../utils/api';
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [calendarLoading, setCalendarLoading] = useState(true);
+  const [calendarError, setCalendarError] = useState('');
+  const { user } = useContext(UserContext);
 
-  // sample data for now
-  const events = [
-    {
-      date: '2024-10-05',
-      title: 'Chess Club Meeting',
-      club: 'Chess Club',
-      location: 'Room 101',
-      time: '3:00 PM',
-    },
-    {
-      date: '2024-10-24',
-      title: 'Science Fair',
-      club: 'Science Club',
-      location: 'Auditorium',
-      time: '1:00 PM',
-    },
-  ];
+  const fetchEvents = async () => {
+    if (!user || user.clubMemberships.length === 0) {
+      setEvents([]);
+      setCalendarLoading(false);
+      return;
+    }
+
+    try {
+      const clubIds = user.clubMemberships.map((membership) => membership.clubId).join(',');
+      const response = await authenticatedFetch(
+        `http://localhost:5051/api/events`,
+        {
+          method: 'GET',
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const events = data.filter((event) => clubIds.includes(event.clubId));
+
+        setEvents(events);
+      } else {
+        const errorData = await response.text();
+        setCalendarError(errorData || 'Failed to fetch events.');
+      }
+    } catch (err) {
+      console.error(err);
+      setCalendarError('An unexpected error occurred while fetching events.');
+    } finally {
+      setCalendarLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, currentDate]);
 
   const prevMonth = () => {
     setCurrentDate(
@@ -57,6 +84,39 @@ const Calendar = () => {
 
   const today = new Date();
 
+  if (calendarLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-xl">Loading calendar...</div>
+      </div>
+    );
+  }
+
+  if (calendarError) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="alert alert-error shadow-lg">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current flex-shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M12 4v16m8-8H4"
+              />
+            </svg>
+            <span>{calendarError}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-screen-md mx-auto px-4 py-12">
       {/* Header with month and year */}
@@ -86,8 +146,14 @@ const Calendar = () => {
             return <div key={index} className="h-24"></div>;
           }
 
-          const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2,'0')}`;
-          const dayEvents = events.filter((event) => event.date === dateString);
+          const dayEvents = events.filter((event) => {
+            const eventDate = new Date(event.dateTime);
+            return (
+              eventDate.getFullYear() === year &&
+              eventDate.getMonth() === month &&
+              eventDate.getDate() === day
+            );
+          });
 
           const isToday =
             day === today.getDate() &&
@@ -104,7 +170,7 @@ const Calendar = () => {
               <div className="text-sm font-bold">{day}</div>
               {dayEvents.map((event) => (
                 <button
-                  key={event.title}
+                  key={event.id}
                   className="block mt-1 text-xs text-blue-600 font-medium hover:underline"
                   onClick={() => setSelectedEvent(event)}
                 >
