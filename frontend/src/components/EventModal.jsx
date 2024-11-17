@@ -7,13 +7,10 @@ const EventModal = ({ event, onClose }) => {
       <div className="modal-box">
         <h2 className="font-bold text-lg font-sans">{event.title}</h2>
         <p className="py-2 font-sans">
-          <strong>Club:</strong> {event.club}
-        </p>
-        <p className="py-2 font-sans">
           <strong>Location:</strong> {event.location}
         </p>
         <p className="py-2 font-sans">
-          <strong>Time:</strong> {event.time}
+          <strong>Time:</strong> {event.dateTime}
         </p>
         <div className="modal-action">
           <button className="btn" onClick={onClose}>

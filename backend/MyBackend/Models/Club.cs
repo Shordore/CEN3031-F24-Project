@@ -1,3 +1,5 @@
+// Models/Club.cs
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClubSwamp.Models
@@ -13,5 +15,8 @@ namespace ClubSwamp.Models
         public string Categories { get; set; }
 
         public ICollection<ClubMember> Members { get; set; } = new List<ClubMember>();
+
+        // New Navigation Property for Events
+        public ICollection<Event> Events { get; set; } = new List<Event>();
     }
 }

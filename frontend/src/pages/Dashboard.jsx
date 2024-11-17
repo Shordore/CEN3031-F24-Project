@@ -167,7 +167,8 @@ function Dashboard() {
         {adminClubs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {adminClubs.map((club) => (
-              <ClubCard key={club.Id} club={club} />
+              console.log(club.id),
+              <ClubCard key={club.id.toString()} club={club} />
             ))}
           </div>
         ) : (
@@ -181,7 +182,7 @@ function Dashboard() {
         {memberClubs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {memberClubs.map((club) => (
-              <ClubCard key={club.Id} club={club} />
+              <ClubCard key={club.id.toString()} club={club} />
             ))}
           </div>
         ) : (
@@ -195,7 +196,8 @@ function Dashboard() {
         {remainingClubs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {remainingClubs.map((club) => (
-              <ClubCard key={club.Id} club={club} />
+              console.log(club.id),
+              <ClubCard key={club.id.toString()} club={club} />
             ))}
           </div>
         ) : (
