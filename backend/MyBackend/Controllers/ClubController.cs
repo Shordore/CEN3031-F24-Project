@@ -79,6 +79,39 @@ namespace ClubSwamp.Controllers
             return response;
         }
 
+
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<ClubResponse>>> SearchClubs(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest("Query parameter is required.");
+
+            var clubs = await _context.Clubs
+                .Where(c => EF.Functions.Like(c.Name, $"%{query}%") ||
+                            EF.Functions.Like(c.Description, $"%{query}%") ||
+                            EF.Functions.Like(c.Categories, $"%{query}%"))
+                .Include(c => c.Members)
+                    .ThenInclude(m => m.User)
+                .ToListAsync();
+
+            var response = clubs.Select(c => new ClubResponse
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                Categories = c.Categories,
+                Members = c.Members.Select(m => new ClubMemberResponse
+                {
+                    UserId = m.UserId,
+                    UFID = m.User.UFID,
+                    Name = m.User.Name,
+                    Role = m.Role.ToString()
+                }).ToList()
+            }).ToList();
+
+            return Ok(response);
+        }
+
         // POST: api/club
         [HttpPost]
         public async Task<ActionResult<ClubResponse>> CreateClub([FromBody] CreateClubRequest request)
@@ -268,5 +301,6 @@ namespace ClubSwamp.Controllers
 
             return Ok("Member promoted to admin successfully.");
         }
+
     }
 }

@@ -1,5 +1,5 @@
 // src/pages/Profile.jsx
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
@@ -27,6 +27,14 @@ function Profile() {
     'Cooking',
     'Fitness',
   ];
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-base-200">
+        <div className="text-xl">Loading profile...</div>
+      </div>
+    );
+  }
 
   // Handle Edit Button Click
   const handleEdit = () => {
@@ -76,7 +84,7 @@ function Profile() {
     try {
       await updateUserProfile(updatedProfile);
       setIsEditing(false);
-    } catch (err) {
+    } catch {
       setFormError('Failed to update profile.');
     }
   };

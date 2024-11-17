@@ -1,5 +1,5 @@
 // src/App.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Routes,
   Route,
@@ -13,8 +13,8 @@ import Login from './pages/UserLogin';
 import CreateClub from './pages/CreateClub';
 import Calendar from './pages/Calendar';
 import Dashboard from './pages/Dashboard';
-import { UserProvider, UserContext } from './context/UserContext';
-
+import { UserProvider } from './context/UserContext';
+import ClubPage from './pages/ClubPage';
 import './App.css';
 
 function App() {
@@ -95,35 +95,42 @@ function App() {
         </nav>
 
         <main className="flex-grow">
-          <Routes>
-            <Route
-              path="/profile"
-              element={
-                isUserLoggedIn ? <Profile /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/create-club"
-              element={
-                isUserLoggedIn ? <CreateClub /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/calendar"
-              element={
-                isUserLoggedIn ? <Calendar /> : <Navigate to="/login" />
-              }
-            />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login onLogin={checkAuth} />} />
-            <Route
-              path="/"
-              element={
-                isUserLoggedIn ? <Dashboard /> : <Navigate to="/login" />
-              }
-            />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
+        <Routes>
+        <Route
+          path="/profile"
+          element={
+            isUserLoggedIn ? <Profile /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/create-club"
+          element={
+            isUserLoggedIn ? <CreateClub /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/calendar"
+          element={
+            isUserLoggedIn ? <Calendar /> : <Navigate to="/login" />
+          }
+        />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login onLogin={checkAuth} />} />
+        <Route
+          path="/"
+          element={
+            isUserLoggedIn ? <Dashboard /> : <Navigate to="/login" />
+          }
+        />
+        {/* New dynamic route for individual club pages */}
+        <Route
+          path="/club_pages/:id"
+          element={
+            isUserLoggedIn ? <ClubPage /> : <Navigate to="/login" />
+          }
+        />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
         </main>
       </div>
     </UserProvider>
