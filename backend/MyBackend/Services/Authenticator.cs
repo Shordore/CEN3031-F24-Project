@@ -21,7 +21,7 @@ namespace ClubSwamp.Services
         }
 
         // Register a new user and save to the database
-        public async Task<bool> RegisterAsync(string ufid, string password)
+        public async Task<bool> RegisterAsync(string ufid, string password, string name, string grade, string major)
         {
             // Check if the UFID already exists in the database
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UFID == ufid);
@@ -38,9 +38,9 @@ namespace ClubSwamp.Services
             {
                 UFID = ufid,
                 PasswordHash = hashedPassword,
-                Name = "",
-                Grade = "",
-                Major = ""
+                Name = name,
+                Grade = grade,
+                Major = major
             };
 
             // Add the user to the database context and save changes
@@ -49,6 +49,7 @@ namespace ClubSwamp.Services
 
             return true;
         }
+
 
         // Hash password using SHA256 (same as before)
         private string HashPassword(string password)

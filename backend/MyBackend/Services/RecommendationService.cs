@@ -27,7 +27,7 @@ namespace ClubSwamp.Services
 
             if (userInterests == null || !userInterests.Any())
             {
-                return new List<Club>(); // Return an empty list if no interests found
+                return new List<Club>();
             }
 
             // Step 2: Fetch clubs that match user interests

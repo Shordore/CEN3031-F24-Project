@@ -33,14 +33,14 @@ namespace ClubSwamp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _authenticator.RegisterAsync(request.UFID, request.Password);
+            var result = await _authenticator.RegisterAsync(request.UFID, request.Password, request.Name, request.Grade, request.Major);
             if (!result)
                 return BadRequest(new { message = "UFID already exists. Please choose a different UFID." });
 
             return Ok(new { message = "User registered successfully." });
         }
 
-       
+
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
@@ -90,7 +90,7 @@ namespace ClubSwamp.Controllers
             return Ok(response);
         }
 
-        
+
         [HttpPut("me")]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request)
         {
@@ -105,8 +105,6 @@ namespace ClubSwamp.Controllers
                 .Include(u => u.InterestCategories)
                 .FirstOrDefaultAsync(u => u.UFID == ufid);
 
-            if (user == null)
-                return NotFound(new { message = "User not found." });
 
             user.Name = request.Name;
             user.Grade = request.Grade;

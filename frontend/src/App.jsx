@@ -15,6 +15,7 @@ import Calendar from './pages/Calendar';
 import Dashboard from './pages/Dashboard';
 import { UserProvider } from './context/UserContext';
 import ClubPage from './pages/ClubPage';
+import Recommendations from './pages/Recommendations';
 import './App.css';
 
 function App() {
@@ -49,53 +50,59 @@ function App() {
   return (
     <UserProvider>
       <div className="flex flex-col min-h-screen">
-        <nav className="navbar bg-base-100 shadow-md">
-          <div className="flex-1">
-            <Link to="/" className="btn btn-ghost normal-case text-xl">
-              ClubSwamp
+      <nav className="navbar bg-base-100 shadow-md">
+  <div className="flex-1">
+    <Link to="/" className="btn btn-ghost normal-case text-xl">
+      ClubSwamp
+    </Link>
+  </div>
+  <div className="flex-none">
+    <ul className="menu menu-horizontal p-0">
+      {!isUserLoggedIn && (
+        <>
+          <li>
+            <Link to="/register" className="menu-item">
+              Register
             </Link>
-          </div>
-          <div className="flex-none">
-            <ul className="menu menu-horizontal p-0">
-              {!isUserLoggedIn && (
-                <>
-                  <li>
-                    <Link to="/register" className="menu-item">
-                      Register
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/login" className="menu-item">
-                      Login
-                    </Link>
-                  </li>
-                </>
-              )}
-              {isUserLoggedIn && (
-                <>
-                  <li>
-                    <Link to="/calendar" className="menu-item">
-                      Calendar
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/profile" className="menu-item">
-                      Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <button onClick={handleLogout} className="menu-item">
-                      Logout
-                    </button>
-                  </li>
-                </>
-              )}
-            </ul>
-          </div>
-        </nav>
+          </li>
+          <li>
+            <Link to="/login" className="menu-item">
+              Login
+            </Link>
+          </li>
+        </>
+      )}
+      {isUserLoggedIn && (
+        <>
+          <li>
+            <Link to="/calendar" className="menu-item">
+              Calendar
+            </Link>
+          </li>
+          <li>
+            <Link to="/profile" className="menu-item">
+              Profile
+            </Link>
+          </li>
+          <li>
+            <Link to="/recommendations" className="menu-item">
+              Recommendations
+            </Link>
+          </li>
+          <li>
+            <button onClick={handleLogout} className="menu-item">
+              Logout
+            </button>
+          </li>
+        </>
+      )}
+    </ul>
+  </div>
+</nav>
 
         <main className="flex-grow">
         <Routes>
+        <Route path="/recommendations" element={<Recommendations />} />
         <Route
           path="/profile"
           element={

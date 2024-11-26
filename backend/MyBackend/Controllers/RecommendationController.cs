@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using ClubSwamp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClubSwamp.Controllers
 {
