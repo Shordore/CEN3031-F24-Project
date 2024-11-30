@@ -122,8 +122,6 @@ namespace ClubSwamp.Controllers
                 return Unauthorized(new { message = "User not authenticated." });
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UFID == ufid);
-            if (user == null)
-                return NotFound(new { message = "User not found." });
 
             var club = new Club
             {
@@ -237,7 +235,7 @@ namespace ClubSwamp.Controllers
             return Ok(members);
         }
 
-       
+
         [HttpPut("{clubId}/promote/{userId}")]
         public async Task<IActionResult> PromoteMember(int clubId, int userId)
         {

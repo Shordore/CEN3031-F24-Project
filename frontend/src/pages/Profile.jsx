@@ -1,5 +1,5 @@
 // src/pages/Profile.jsx
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
@@ -14,6 +14,15 @@ function Profile() {
   });
   const [formError, setFormError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        window.location.href = '/profile';
+      }, 1000);
+    }
+  }, [loading]);
+
 
   const availableInterests = [
     'Technology',
@@ -38,7 +47,7 @@ function Profile() {
 
   // Handle Edit Button Click
   const handleEdit = () => {
-    if (user) {
+  
       setFormData({
         name: user.name || '',
         grade: user.grade || '',
@@ -47,7 +56,7 @@ function Profile() {
       });
       setIsEditing(true);
       setFormError('');
-    }
+    
   };
 
   // Handle Input Change
@@ -132,9 +141,17 @@ function Profile() {
     );
   }
 
+
+  //TODO: reimplement after fixing bug
+  /*
   if (!user) {
-    return null; // Or some fallback UI
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-base-200">
+        <p className="text-xl">No user data available. Please try logging in again.</p>
+      </div>
+    );
   }
+    */
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-base-200 p-4">
@@ -274,35 +291,41 @@ function Profile() {
             </div>
 
             <div className="relative">
-              <label className="label">
-                <span className="label-text">Interests</span>
-              </label>
-              <div className="dropdown dropdown-hover w-full">
-                <label tabIndex={0} className="btn btn-outline w-full text-left">
-                  {formData.interests.length > 0
-                    ? `${formData.interests.length} Interest(s) Selected`
-                    : 'Select Interests'}
-                </label>
-                <ul
-                  tabIndex={0}
-                  className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-h-60 overflow-y-auto"
-                >
-                  {availableInterests.map((interest) => (
-                    <li key={interest}>
-                      <label className="cursor-pointer label">
-                        <input
-                          type="checkbox"
-                          className="checkbox mr-2"
-                          checked={formData.interests.includes(interest)}
-                          onChange={() => toggleInterest(interest)}
-                        />
-                        {interest}
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+  <label className="label">
+    <span className="label-text">Interests</span>
+  </label>
+  <div className="dropdown dropdown-hover w-full">
+    <label tabIndex={0} className="btn btn-outline w-full text-left">
+      {formData.interests.length > 0
+        ? `${formData.interests.length} Interest(s) Selected`
+        : 'Select Interests'}
+    </label>
+    <ul
+      tabIndex={0}
+      className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-h-60 overflow-y-auto"
+      style={{
+        position: 'absolute',
+        bottom: '100%', // Position the dropdown above
+        left: 0,
+        zIndex: 50, // Ensure it appears above other elements
+      }}
+    >
+      {availableInterests.map((interest) => (
+        <li key={interest}>
+          <label className="cursor-pointer label">
+            <input
+              type="checkbox"
+              className="checkbox mr-2"
+              checked={formData.interests.includes(interest)}
+              onChange={() => toggleInterest(interest)}
+            />
+            {interest}
+          </label>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
 
             <div className="flex justify-between">
               <button

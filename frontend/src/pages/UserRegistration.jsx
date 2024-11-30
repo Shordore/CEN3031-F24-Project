@@ -33,6 +33,9 @@ function Registration() {
     const registrationData = {
       ufid: formData.ufid,
       password: formData.password,
+      name: formData.name,
+      grade: formData.grade,
+      major: formData.major,
     };
 
     try {
@@ -98,6 +101,58 @@ function Registration() {
               placeholder="Enter your UFID"
               className="input input-bordered w-full"
               value={formData.ufid}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+                    {/* Name */}
+          <div>
+            <label className="label">
+              <span className="label-text">Name</span>
+            </label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              className="input input-bordered w-full"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {/* Grade */}
+<div>
+  <label className="label">
+    <span className="label-text">Grade</span>
+  </label>
+  <select
+    name="grade"
+    className="select select-bordered w-full"
+    value={formData.grade}
+    onChange={handleChange}
+    required
+  >
+    <option value="" disabled>Select your grade</option>
+    <option value="Freshman">Freshman</option>
+    <option value="Sophomore">Sophomore</option>
+    <option value="Junior">Junior</option>
+    <option value="Senior">Senior</option>
+  </select>
+</div>
+
+          {/* Major */}
+          <div>
+            <label className="label">
+              <span className="label-text">Major</span>
+            </label>
+            <input
+              type="text"
+              name="major"
+              placeholder="Enter your major"
+              className="input input-bordered w-full"
+              value={formData.major}
               onChange={handleChange}
               required
             />

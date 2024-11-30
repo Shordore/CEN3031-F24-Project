@@ -24,6 +24,8 @@ builder.Services.AddCors(options =>
 // Register your services
 builder.Services.AddScoped<Authenticator>();
 
+builder.Services.AddScoped<RecommendationService>();
+
 // Configure services
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 

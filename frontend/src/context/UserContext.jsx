@@ -49,7 +49,6 @@ export const UserProvider = ({ children }) => {
   const updateUserProfile = async (updatedProfile) => {
     setLoading(true);
     setError('');
-    try {
       const response = await authenticatedFetch('http://localhost:5051/api/Account/me', {
         method: 'PUT',
         headers: {
@@ -68,11 +67,6 @@ export const UserProvider = ({ children }) => {
         const errorData = await response.text();
         setError(errorData || 'Failed to update profile.');
       }
-    } catch (err) {
-      setError('An unexpected error occurred while updating profile.');
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (

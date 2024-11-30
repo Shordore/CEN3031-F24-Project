@@ -35,8 +35,6 @@ namespace ClubSwamp.Controllers
                 .Include(u => u.ClubMemberships)
                 .FirstOrDefaultAsync(u => u.UFID == ufid);
 
-            if (user == null)
-                return NotFound(new { message = "User not found." });
 
             var clubIds = user.ClubMemberships.Select(cm => cm.ClubId).ToList();
 
