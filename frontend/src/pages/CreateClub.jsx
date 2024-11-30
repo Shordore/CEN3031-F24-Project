@@ -1,6 +1,9 @@
-import { useState } from 'react';
+// src/pages/CreateClub.jsx
+
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authenticatedFetch } from '../utils/api';
+import { UserContext } from '../context/UserContext';
 
 function CreateClub() {
   const navigate = useNavigate();
@@ -13,6 +16,7 @@ function CreateClub() {
 
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { fetchUserProfile } = useContext(UserContext);
 
   const availableCategories = [
     'Technology',
@@ -63,8 +67,9 @@ function CreateClub() {
       });
   
       if (response.ok) {
-        const newClub = await response.json(); // Assuming the response contains the new club's ID or slug
-        navigate(`/club_pages/${newClub.id}`); // Navigate to the club's page
+        const newClub = await response.json();
+        fetchUserProfile(); // Refresh user profile to reflect new club membership
+        navigate(`/club_pages/${newClub.id}`);
       } else {
         const errorData = await response.text();
         setError(errorData || 'Failed to create club.');

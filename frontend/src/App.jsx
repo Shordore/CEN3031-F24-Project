@@ -75,6 +75,11 @@ function App() {
       {isUserLoggedIn && (
         <>
           <li>
+            <Link to="/" className="menu-item">
+              Dashboard
+            </Link>
+          </li>
+          <li>
             <Link to="/calendar" className="menu-item">
               Calendar
             </Link>

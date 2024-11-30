@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+// src/pages/Registration.jsx
+
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authenticatedFetch } from '../utils/api';
 
 function Registration() {
   const navigate = useNavigate();
@@ -8,11 +11,15 @@ function Registration() {
     ufid: '',
     password: '',
     confirmPassword: '',
-  });
+    name: '',
+    grade: '',
+    major: '',
+  }); // Stores user input for registration fields
 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Handle input changes and update formData state
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -22,9 +29,11 @@ function Registration() {
     setError('');
   };
 
+  // Handle form submission for user registration
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate that passwords match
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match!');
       return;
@@ -40,7 +49,7 @@ function Registration() {
 
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:5051/api/Account/register', {
+      const response = await authenticatedFetch('http://localhost:5051/api/Account/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,8 +61,8 @@ function Registration() {
         alert('Registration successful! Please log in.');
         navigate('/login');
       } else {
-        // TODO: show custom error message from backend
-        setError('Invalid UFID or password.');
+        const errorData = await response.text();
+        setError(errorData || 'Invalid UFID or password.');
       }
     } catch {
       setError('An unexpected error occurred. Please try again later.');
@@ -89,8 +98,9 @@ function Registration() {
           </div>
         )}
 
+        {/* Registration Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* UFID */}
+          {/* UFID Input Field */}
           <div>
             <label className="label">
               <span className="label-text">UFID</span>
@@ -106,7 +116,7 @@ function Registration() {
             />
           </div>
 
-                    {/* Name */}
+          {/* Name Input Field */}
           <div>
             <label className="label">
               <span className="label-text">Name</span>
@@ -122,27 +132,27 @@ function Registration() {
             />
           </div>
 
-          {/* Grade */}
-<div>
-  <label className="label">
-    <span className="label-text">Grade</span>
-  </label>
-  <select
-    name="grade"
-    className="select select-bordered w-full"
-    value={formData.grade}
-    onChange={handleChange}
-    required
-  >
-    <option value="" disabled>Select your grade</option>
-    <option value="Freshman">Freshman</option>
-    <option value="Sophomore">Sophomore</option>
-    <option value="Junior">Junior</option>
-    <option value="Senior">Senior</option>
-  </select>
-</div>
+          {/* Grade Select Field */}
+          <div>
+            <label className="label">
+              <span className="label-text">Grade</span>
+            </label>
+            <select
+              name="grade"
+              className="select select-bordered w-full"
+              value={formData.grade}
+              onChange={handleChange}
+              required
+            >
+              <option value="" disabled>Select your grade</option>
+              <option value="Freshman">Freshman</option>
+              <option value="Sophomore">Sophomore</option>
+              <option value="Junior">Junior</option>
+              <option value="Senior">Senior</option>
+            </select>
+          </div>
 
-          {/* Major */}
+          {/* Major Input Field */}
           <div>
             <label className="label">
               <span className="label-text">Major</span>
@@ -158,7 +168,7 @@ function Registration() {
             />
           </div>
 
-          {/* Password */}
+          {/* Password Input Field */}
           <div>
             <label className="label">
               <span className="label-text">Password</span>
@@ -174,7 +184,7 @@ function Registration() {
             />
           </div>
 
-          {/* Confirm Password */}
+          {/* Confirm Password Input Field */}
           <div>
             <label className="label">
               <span className="label-text">Confirm Password</span>
