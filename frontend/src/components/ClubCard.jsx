@@ -1,4 +1,5 @@
 // src/components/ClubCard.jsx
+
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useContext } from 'react';
@@ -8,14 +9,21 @@ function ClubCard({ club }) {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
 
+  // Navigate to the club's page when the card is clicked
   const handleClick = () => {
-    navigate(`/club_pages/${club.id}`); // Navigate to the club page using the correct route
+    navigate(`/club_pages/${club.id}`);
   };
 
+  if (!user || !user.clubMemberships) {
+    return null;
+  }
+
+  // Check if the current user is a member of the club
   const isMember = user
     ? user.clubMemberships.some((membership) => membership.clubId === club.id)
     : false;
 
+  // Check if the current user is an admin of the club
   const isAdmin = user
     ? user.clubMemberships.some(
         (membership) => membership.clubId === club.id && membership.role === 'Admin'
@@ -30,7 +38,9 @@ function ClubCard({ club }) {
       <div className="card-body">
         <h2 className="card-title flex justify-between items-center">
           {club.name}
+          {/* Display 'Admin' badge if the user is an admin */}
           {isAdmin && <span className="badge badge-success">Admin</span>}
+          {/* Display 'Member' badge if the user is a member but not an admin */}
           {!isAdmin && isMember && <span className="badge badge-primary">Member</span>}
         </h2>
         <p>{club.description}</p>
@@ -47,7 +57,7 @@ function ClubCard({ club }) {
 
 ClubCard.propTypes = {
   club: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
     categories: PropTypes.string,

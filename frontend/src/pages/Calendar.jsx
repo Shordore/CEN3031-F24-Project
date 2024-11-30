@@ -1,5 +1,6 @@
 // src/pages/Calendar.jsx
-import React, { useState, useEffect, useContext } from 'react';
+
+import { useState, useEffect, useContext } from 'react';
 import EventModal from '../components/EventModal';
 import { UserContext } from '../context/UserContext';
 import { authenticatedFetch } from '../utils/api';
@@ -12,8 +13,9 @@ const Calendar = () => {
   const [calendarError, setCalendarError] = useState('');
   const { user } = useContext(UserContext);
 
+  // Fetch events associated with the user's club memberships
   const fetchEvents = async () => {
-    if (!user || user.clubMemberships.length === 0) {
+    if (!user || !user.clubMemberships || user.clubMemberships.length === 0) {
       setEvents([]);
       setCalendarLoading(false);
       return;
@@ -21,18 +23,15 @@ const Calendar = () => {
 
     try {
       const clubIds = user.clubMemberships.map((membership) => membership.clubId).join(',');
-      const response = await authenticatedFetch(
-        `http://localhost:5051/api/events`,
-        {
-          method: 'GET',
-        }
-      );
+      const response = await authenticatedFetch(`http://localhost:5051/api/events`, {
+        method: 'GET',
+      });
 
       if (response.ok) {
         const data = await response.json();
-        const events = data.filter((event) => clubIds.includes(event.clubId));
-
-        setEvents(events);
+        // Filter events to include only those from the user's clubs
+        const filteredEvents = data.filter((event) => clubIds.includes(event.clubId.toString()));
+        setEvents(filteredEvents);
       } else {
         const errorData = await response.text();
         setCalendarError(errorData || 'Failed to fetch events.');
@@ -45,17 +44,20 @@ const Calendar = () => {
     }
   };
 
+  // Fetch events when the component mounts or when the user/currentDate changes
   useEffect(() => {
     fetchEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, currentDate]);
 
+  // Navigate to the previous month
   const prevMonth = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
     );
   };
 
+  // Navigate to the next month
   const nextMonth = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
@@ -65,14 +67,18 @@ const Calendar = () => {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
+  // Determine the first day of the month (0 = Sunday, 6 = Saturday)
   const firstDayOfMonth = new Date(year, month, 1).getDay();
+  // Get the total number of days in the current month
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   const daysArray = [];
+  // Add empty slots for days before the first day of the month
   for (let i = 0; i < firstDayOfMonth; i++) {
     daysArray.push(null);
   }
 
+  // Populate the array with day numbers
   for (let i = 1; i <= daysInMonth; i++) {
     daysArray.push(i);
   }
@@ -119,7 +125,7 @@ const Calendar = () => {
 
   return (
     <div className="max-w-screen-md mx-auto px-4 py-12">
-      {/* Header with month and year */}
+      {/* Header with month and year navigation */}
       <div className="flex justify-between items-center mb-4">
         <button className="btn" onClick={prevMonth}>
           &lt;
@@ -132,20 +138,21 @@ const Calendar = () => {
         </button>
       </div>
 
-      {/* Day names */}
+      {/* Display the days of the week */}
       <div className="grid grid-cols-7 gap-2 text-center font-bold">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
           <div key={day}>{day}</div>
         ))}
       </div>
 
-      {/* Calendar grid */}
+      {/* Calendar grid displaying each day and its events */}
       <div className="grid grid-cols-7 gap-2">
         {daysArray.map((day, index) => {
           if (day === null) {
             return <div key={index} className="h-24"></div>;
           }
 
+          // Filter events that occur on the current day
           const dayEvents = events.filter((event) => {
             const eventDate = new Date(event.dateTime);
             return (
@@ -155,6 +162,7 @@ const Calendar = () => {
             );
           });
 
+          // Check if the day is today
           const isToday =
             day === today.getDate() &&
             month === today.getMonth() &&
@@ -182,7 +190,7 @@ const Calendar = () => {
         })}
       </div>
 
-      {/* Event details modal */}
+      {/* Modal to display event details when an event is selected */}
       {selectedEvent && (
         <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
       )}

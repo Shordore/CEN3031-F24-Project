@@ -1,4 +1,5 @@
-// Data/AppDbContext.cs
+// Data/AppDbContext.cs\
+
 using ClubSwamp.Models;
 using Microsoft.EntityFrameworkCore;
 

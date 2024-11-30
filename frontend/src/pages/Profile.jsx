@@ -1,10 +1,11 @@
 // src/pages/Profile.jsx
+
 import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
 function Profile() {
-  const { user, loading, error, updateUserProfile } = useContext(UserContext);
+  const { user, loading, error, updateUserProfile, fetchUserProfile } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -15,14 +16,10 @@ function Profile() {
   const [formError, setFormError] = useState('');
   const navigate = useNavigate();
 
+  // Fetch the latest user profile when the component mounts
   useEffect(() => {
-    if (loading) {
-      setTimeout(() => {
-        window.location.href = '/profile';
-      }, 1000);
-    }
-  }, [loading]);
-
+    fetchUserProfile();
+  }, []);
 
   const availableInterests = [
     'Technology',
@@ -37,7 +34,8 @@ function Profile() {
     'Fitness',
   ];
 
-  if (loading) {
+  // Display a loading state while fetching user data
+  if (loading || !user) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-base-200">
         <div className="text-xl">Loading profile...</div>
@@ -45,21 +43,19 @@ function Profile() {
     );
   }
 
-  // Handle Edit Button Click
+  // Handle Edit Button Click to enable edit mode and populate form with existing user data
   const handleEdit = () => {
-  
-      setFormData({
-        name: user.name || '',
-        grade: user.grade || '',
-        major: user.major || '',
-        interests: user.interestCategories || [],
-      });
-      setIsEditing(true);
-      setFormError('');
-    
+    setFormData({
+      name: user.name || '',
+      grade: user.grade || '',
+      major: user.major || '',
+      interests: user.interestCategories || [],
+    });
+    setIsEditing(true);
+    setFormError('');
   };
 
-  // Handle Input Change
+  // Handle Input Change for text and select fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -68,7 +64,7 @@ function Profile() {
     }));
   };
 
-  // Toggle Interest Selection
+  // Toggle Interest Selection by adding or removing interests from the form data
   const toggleInterest = (interest) => {
     setFormData((prev) => {
       const interests = prev.interests.includes(interest)
@@ -78,44 +74,38 @@ function Profile() {
     });
   };
 
-  // Handle Form Submission
+  // Handle Form Submission to update the user profile
   const handleSave = async (e) => {
     e.preventDefault();
     setFormError('');
 
     const updatedProfile = {
-      name: formData.name,
-      grade: formData.grade,
-      major: formData.major,
-      interestCategories: formData.interests,
+      name: formData.name || '',
+      grade: formData.grade || '',
+      major: formData.major || '',
+      interestCategories: formData.interests || [],
     };
 
     try {
-      await updateUserProfile(updatedProfile);
+      await updateUserProfile(updatedProfile); // Update the user profile via context
       setIsEditing(false);
     } catch {
-      setFormError('Failed to update profile.');
+      setFormError('Failed to update profile.'); // Display an error message if update fails
     }
   };
 
-  // Handle Cancel Editing
+  // Handle Cancel Editing by reverting back to view mode without saving changes
   const handleCancel = () => {
     setIsEditing(false);
     setFormError('');
   };
 
+  // Navigate to the Create Club page
   const handleCreateClub = () => {
     navigate('/create-club');
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl">Loading profile...</div>
-      </div>
-    );
-  }
-
+  // Display an error message if there's an error fetching or updating the profile
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -141,36 +131,29 @@ function Profile() {
     );
   }
 
-
-  //TODO: reimplement after fixing bug
-  /*
-  if (!user) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-base-200">
-        <p className="text-xl">No user data available. Please try logging in again.</p>
-      </div>
-    );
-  }
-    */
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-base-200 p-4">
       <div className="card w-full max-w-md bg-base-100 shadow-xl p-6">
-        {!isEditing ? (
+        {/* Display Profile Information when not in edit mode */}
+        {!isEditing && user ? (
           <div className="space-y-4">
             <h2 className="text-2xl font-bold mb-4 text-center">User Profile</h2>
+            {/* User Name */}
             <div>
               <h3 className="font-semibold">Name:</h3>
               <p>{user.name || 'N/A'}</p>
             </div>
+            {/* User Grade */}
             <div>
               <h3 className="font-semibold">Grade:</h3>
               <p>{user.grade || 'N/A'}</p>
             </div>
+            {/* User Major */}
             <div>
               <h3 className="font-semibold">Major:</h3>
               <p>{user.major || 'N/A'}</p>
             </div>
+            {/* User Interests */}
             <div>
               <h3 className="font-semibold">Interests:</h3>
               <ul className="list-disc list-inside">
@@ -183,6 +166,7 @@ function Profile() {
                 )}
               </ul>
             </div>
+            {/* Display form error message if any */}
             {formError && (
               <div className="alert alert-error shadow-lg">
                 <div>
@@ -203,6 +187,7 @@ function Profile() {
                 </div>
               </div>
             )}
+            {/* Action Buttons: Edit Profile and Create New Club */}
             <div className="flex flex-col space-y-2">
               <button className="btn btn-primary" onClick={handleEdit}>
                 Edit Profile
@@ -213,6 +198,7 @@ function Profile() {
             </div>
           </div>
         ) : (
+          /* Display Edit Profile Form when in edit mode */
           <form onSubmit={handleSave} className="space-y-4">
             <h2 className="text-2xl font-bold mb-4 text-center">Edit Profile</h2>
 
@@ -238,6 +224,7 @@ function Profile() {
               </div>
             )}
 
+            {/* Name Input Field */}
             <div>
               <label className="label">
                 <span className="label-text">Name</span>
@@ -247,12 +234,13 @@ function Profile() {
                 name="name"
                 placeholder="Enter your name"
                 className="input input-bordered w-full"
-                value={formData.name}
+                value={formData.name || ''}
                 onChange={handleChange}
                 required
               />
             </div>
 
+            {/* Grade Select Field */}
             <div>
               <label className="label">
                 <span className="label-text">Grade</span>
@@ -260,7 +248,7 @@ function Profile() {
               <select
                 name="grade"
                 className="select select-bordered w-full"
-                value={formData.grade}
+                value={formData.grade || ''}
                 onChange={handleChange}
                 required
               >
@@ -275,6 +263,7 @@ function Profile() {
               </select>
             </div>
 
+            {/* Major Input Field */}
             <div>
               <label className="label">
                 <span className="label-text">Major</span>
@@ -284,49 +273,51 @@ function Profile() {
                 name="major"
                 placeholder="Enter your major"
                 className="input input-bordered w-full"
-                value={formData.major}
+                value={formData.major || ''}
                 onChange={handleChange}
                 required
               />
             </div>
 
+            {/* Interests Selection */}
             <div className="relative">
-  <label className="label">
-    <span className="label-text">Interests</span>
-  </label>
-  <div className="dropdown dropdown-hover w-full">
-    <label tabIndex={0} className="btn btn-outline w-full text-left">
-      {formData.interests.length > 0
-        ? `${formData.interests.length} Interest(s) Selected`
-        : 'Select Interests'}
-    </label>
-    <ul
-      tabIndex={0}
-      className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-h-60 overflow-y-auto"
-      style={{
-        position: 'absolute',
-        bottom: '100%', // Position the dropdown above
-        left: 0,
-        zIndex: 50, // Ensure it appears above other elements
-      }}
-    >
-      {availableInterests.map((interest) => (
-        <li key={interest}>
-          <label className="cursor-pointer label">
-            <input
-              type="checkbox"
-              className="checkbox mr-2"
-              checked={formData.interests.includes(interest)}
-              onChange={() => toggleInterest(interest)}
-            />
-            {interest}
-          </label>
-        </li>
-      ))}
-    </ul>
-  </div>
-</div>
+              <label className="label">
+                <span className="label-text">Interests</span>
+              </label>
+              <div className="dropdown dropdown-hover w-full">
+                <label tabIndex={0} className="btn btn-outline w-full text-left">
+                  {formData.interests.length > 0
+                    ? `${formData.interests.length} Interest(s) Selected`
+                    : 'Select Interests'}
+                </label>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-h-60 overflow-y-auto"
+                  style={{
+                    position: 'absolute',
+                    bottom: '100%',
+                    left: 0,
+                    zIndex: 50,
+                  }}
+                >
+                  {availableInterests.map((interest) => (
+                    <li key={interest}>
+                      <label className="cursor-pointer label">
+                        <input
+                          type="checkbox"
+                          className="checkbox mr-2"
+                          checked={formData.interests && formData.interests.includes(interest)}
+                          onChange={() => toggleInterest(interest)}
+                        />
+                        {interest}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
 
+            {/* Action Buttons: Cancel and Save */}
             <div className="flex justify-between">
               <button
                 type="button"

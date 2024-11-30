@@ -1,5 +1,6 @@
 // src/components/EventCreationModal.jsx
-import React, { useState } from 'react';
+
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { authenticatedFetch } from '../utils/api';
 
@@ -13,6 +14,7 @@ const EventCreationModal = ({ clubId, onClose, onEventCreated }) => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Handle input changes and update event data state
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEventData((prev) => ({
@@ -22,12 +24,13 @@ const EventCreationModal = ({ clubId, onClose, onEventCreated }) => {
     setError('');
   };
 
+  // Handle form submission to create a new event
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
 
-    // Basic validation
+    // Validate required fields
     if (!eventData.title || !eventData.datetime) {
       setError('Please provide at least a title and date/time for the event.');
       setIsSubmitting(false);
@@ -59,7 +62,7 @@ const EventCreationModal = ({ clubId, onClose, onEventCreated }) => {
         const errorData = await response.text();
         setError(errorData || 'Failed to create event.');
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred while creating the event.');
     } finally {
       setIsSubmitting(false);
@@ -91,7 +94,7 @@ const EventCreationModal = ({ clubId, onClose, onEventCreated }) => {
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          {/* Title */}
+          {/* Title Input */}
           <div>
             <label className="label">
               <span className="label-text">Title</span>
@@ -107,7 +110,7 @@ const EventCreationModal = ({ clubId, onClose, onEventCreated }) => {
             />
           </div>
 
-          {/* Description */}
+          {/* Description Input */}
           <div>
             <label className="label">
               <span className="label-text">Description</span>
@@ -121,7 +124,7 @@ const EventCreationModal = ({ clubId, onClose, onEventCreated }) => {
             ></textarea>
           </div>
 
-          {/* Location */}
+          {/* Location Input */}
           <div>
             <label className="label">
               <span className="label-text">Location</span>
@@ -136,7 +139,7 @@ const EventCreationModal = ({ clubId, onClose, onEventCreated }) => {
             />
           </div>
 
-          {/* Date/Time */}
+          {/* Date and Time Input */}
           <div>
             <label className="label">
               <span className="label-text">Date and Time</span>
@@ -151,7 +154,7 @@ const EventCreationModal = ({ clubId, onClose, onEventCreated }) => {
             />
           </div>
 
-          {/* Buttons */}
+          {/* Action Buttons */}
           <div className="flex justify-end space-x-2">
             <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isSubmitting}>
               Cancel

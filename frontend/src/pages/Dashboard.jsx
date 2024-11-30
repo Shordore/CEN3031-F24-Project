@@ -1,4 +1,5 @@
 // src/pages/Dashboard.jsx
+
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import { authenticatedFetch } from '../utils/api';
@@ -15,6 +16,7 @@ function Dashboard() {
   const [searchResults, setSearchResults] = useState([]); // State for search results
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown visibility
 
+  // Fetch all clubs when the component mounts
   useEffect(() => {
     const fetchAllClubs = async () => {
       setClubsLoading(true);
@@ -26,7 +28,6 @@ function Dashboard() {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setAllClubs(data);
         } else {
           const errorData = await response.text();
@@ -42,7 +43,7 @@ function Dashboard() {
     fetchAllClubs();
   }, []);
 
-  // Fetch search results from the backend
+  // Fetch search results whenever the search query changes
   useEffect(() => {
     const fetchSearchResults = async () => {
       if (!searchQuery.trim()) {
@@ -77,7 +78,8 @@ function Dashboard() {
     fetchSearchResults();
   }, [searchQuery]);
 
-  if (userLoading || clubsLoading) {
+  // Display loading state if user data or clubs are still loading
+  if (userLoading || clubsLoading || !allClubs || !user) { 
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-xl">Loading dashboard...</div>
@@ -85,6 +87,7 @@ function Dashboard() {
     );
   }
 
+  // Display error message if there's an error fetching user data or clubs
   if (userError || clubsError) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -110,10 +113,7 @@ function Dashboard() {
     );
   }
 
-  if (!user) {
-    return null; // Or some fallback UI
-  }
-
+  // Extract club IDs where the user has Admin or Member roles
   const adminClubIds = user.clubMemberships
     .filter((membership) => membership.role === 'Admin')
     .map((membership) => membership.clubId);
@@ -122,6 +122,7 @@ function Dashboard() {
     .filter((membership) => membership.role === 'Member')
     .map((membership) => membership.clubId);
 
+  // Categorize clubs based on the user's roles
   const adminClubs = allClubs.filter((club) => adminClubIds.includes(club.id));
   const memberClubs = allClubs.filter((club) => memberClubIds.includes(club.id));
   const remainingClubs = allClubs.filter(
@@ -133,41 +134,40 @@ function Dashboard() {
       <h1 className="text-3xl font-bold mb-6 text-center">Dashboard</h1>
 
       {/* Search Bar with Dropdown */}
-<div className="mb-6 relative">
-  <input
-    type="text"
-    placeholder="Search for clubs..."
-    value={searchQuery}
-    onChange={(e) => setSearchQuery(e.target.value)}
-    className="input input-bordered w-full max-w-md mx-auto block"
-  />
-  {isDropdownOpen && searchResults.length > 0 && (
-    <ul className="absolute bg-white border border-gray-300 rounded-md shadow-lg w-full max-w-md mt-2 mx-auto left-1/2 transform -translate-x-1/2 z-10">
-      {searchResults.map((club) => (
-        <li
-          key={club.id}
-          className="p-4 hover:bg-gray-100 cursor-pointer"
-          onClick={() => {
-            navigate(`/club_pages/${club.id}`);
-            setSearchQuery('');
-            setIsDropdownOpen(false);
-          }}
-        >
-          <strong className="text-lg">{club.name}</strong>
-          <p className="text-sm text-gray-500">{club.description}</p>
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
+      <div className="mb-6 relative">
+        <input
+          type="text"
+          placeholder="Search for clubs..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="input input-bordered w-full max-w-md mx-auto block"
+        />
+        {isDropdownOpen && searchResults.length > 0 && (
+          <ul className="absolute bg-white border border-gray-300 rounded-md shadow-lg w-full max-w-md mt-2 mx-auto left-1/2 transform -translate-x-1/2 z-10">
+            {searchResults.map((club) => (
+              <li
+                key={club.id}
+                className="p-4 hover:bg-gray-100 cursor-pointer"
+                onClick={() => {
+                  navigate(`/club_pages/${club.id}`);
+                  setSearchQuery('');
+                  setIsDropdownOpen(false);
+                }}
+              >
+                <strong className="text-lg">{club.name}</strong>
+                <p className="text-sm text-gray-500">{club.description}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-      {/* Admin Clubs */}
+      {/* Admin Clubs Section */}
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Clubs You Admin</h2>
         {adminClubs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {adminClubs.map((club) => (
-              console.log(club.id),
               <ClubCard key={club.id.toString()} club={club} />
             ))}
           </div>
@@ -176,7 +176,7 @@ function Dashboard() {
         )}
       </section>
 
-      {/* Member Clubs */}
+      {/* Member Clubs Section */}
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Clubs You Are a Member Of</h2>
         {memberClubs.length > 0 ? (
@@ -190,13 +190,12 @@ function Dashboard() {
         )}
       </section>
 
-      {/* Remaining Clubs */}
+      {/* Remaining Clubs Section */}
       <section>
         <h2 className="text-2xl font-semibold mb-4">Other Clubs</h2>
         {remainingClubs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {remainingClubs.map((club) => (
-              console.log(club.id),
               <ClubCard key={club.id.toString()} club={club} />
             ))}
           </div>
